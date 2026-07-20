@@ -35,13 +35,13 @@ ab_glyph = "0.2.23"
 accelerate-src = { version = "0.3.2" }
 anyhow = { version = "1", features = ["backtrace"] }
 byteorder = "1.4.3"
-candle = { path = "./candle-core", package = "candle-core", version = "0.11.0" }
+candle = { path = "./candle-core", package = "onde-candle-core", version = "0.11.0" }
 candle-datasets = { path = "./candle-datasets", version = "0.11.0" }
 candle-flash-attn = { path = "./candle-flash-attn", version = "0.11.0" }
 candle-flash-attn-v3 = { path = "./candle-flash-attn-v3", version = "0.11.0" }
 candle-kernels = { path = "./candle-kernels", version = "0.11.0" }
 candle-metal-kernels = { path = "./candle-metal-kernels", version = "0.11.0" }
-candle-nn = { path = "./candle-nn", version = "0.11.0" }
+candle-nn = { path = "./candle-nn", package = "onde-candle-nn", version = "0.11.0" }
 candle-onnx = { path = "./candle-onnx", version = "0.11.0" }
 candle-transformers = { path = "./candle-transformers", version = "0.11.0" }
 candle-ug = { path = "./candle-ug", version = "0.11.0" }

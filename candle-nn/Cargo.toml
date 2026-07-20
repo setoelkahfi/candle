@@ -1,5 +1,5 @@
 [package]
-name = "candle-nn"
+name = "onde-candle-nn"
 version.workspace = true
 edition.workspace = true
 description.workspace = true

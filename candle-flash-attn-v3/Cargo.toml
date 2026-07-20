@@ -12,7 +12,7 @@ readme = "README.md"
 exclude = ["cutlass/docs/**", "cutlass/test/**", "cutlass/examples/**", "cutlass/tools/**", "cutlass/media/**"]
 
 [dependencies]
-candle = { path = "../candle-core", features = ["cuda"], package = "candle-core", version = "0.11.0" }
+candle = { path = "../candle-core", features = ["cuda"], package = "onde-candle-core", version = "0.11.0" }
 half = { version = "2.3.1", features = ["num-traits"] }
 
 [build-dependencies]
@@ -23,5 +23,5 @@ cudaforge = "0.1"
 
 [dev-dependencies]
 anyhow = { version = "1", features = ["backtrace"] }
-candle-nn = { path = "../candle-nn", features = ["cuda"] }
+candle-nn = { path = "../candle-nn", package = "onde-candle-nn", features = ["cuda"] }
 rstest = "0.23"

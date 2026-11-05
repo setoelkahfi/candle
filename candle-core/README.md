@@ -22,9 +22,10 @@ the same as with upstream candle.
 
 - Runtime-dispatched CPU kernels, including a 256-bit AVX-VNNI/AVX2 tier and an
   expert-bucketed indexed matmul for MoE prefill.
-- 0.11.1: a Metal fix. A strided reduce over a tensor with more than four dimensions
-  read the wrong elements, which gave a wrong gradient for expand followed by reshape
-  (grouped-query attention). The Metal backend now depends on `onde-candle-metal-kernels`.
+- Metal strided reduces over more than four dimensions are correct. The bug was in
+  `candle-metal-kernels` 0.11.0 (the Metal feature gives a wrong gradient for expand followed
+  by reshape, as in grouped-query attention). 0.11.2 requires `candle-metal-kernels` 0.11.1,
+  the upstream release with the fix.
 
 ## License
 

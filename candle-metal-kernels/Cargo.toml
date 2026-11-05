@@ -1,14 +1,18 @@
 [package]
-name = "candle-metal-kernels"
-version = "0.11.0"
+name = "onde-candle-metal-kernels"
+version = "0.11.1"
 edition = "2021"
 
-description = "Metal kernels for Candle"
-repository = "https://github.com/huggingface/candle"
+description = "Onde Inference build of candle-metal-kernels, with a fix for strided reduces over more than four dimensions."
+repository = "https://github.com/setoelkahfi/candle"
+readme = "README.md"
 keywords = ["blas", "tensor", "machine-learning"]
 categories = ["science"]
 license = "MIT OR Apache-2.0"
 
+
+[lib]
+name = "candle_metal_kernels"
 
 [features]
 default = []

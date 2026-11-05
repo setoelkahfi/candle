@@ -2,12 +2,15 @@
 name = "onde-candle-core"
 version.workspace = true
 edition.workspace = true
-description.workspace = true
+description = "Onde Inference build of candle-core: the Hugging Face candle tensor library plus CPU kernel work and a Metal reduce fix."
 repository.workspace = true
 keywords.workspace = true
 categories.workspace = true
 license.workspace = true
 readme = "README.md"
+
+[lib]
+name = "candle_core"
 
 [dependencies]
 accelerate-src = { workspace = true, optional = true }

@@ -80,9 +80,12 @@ METAL_FUNC IndexT get_strided_idx_fallback(
 ) {
     strided_indexer<D, IndexT> next {dims, strides};
 
+    // Dimensions D..num_dims-1 are the fastest varying ones, so they are
+    // consumed first, innermost last-index first. What remains of idx then
+    // addresses dimensions 0..D-1 through the unrolled indexer.
     IndexT strided_i = 0;
-    for (IndexT d = D; d < num_dims; d++) {
-        IndexT dim_idx = num_dims - 1 - d;
+    for (IndexT d = num_dims; d > D; d--) {
+        IndexT dim_idx = d - 1;
         IndexT dim = dims[dim_idx];
         strided_i += (idx % dim) * strides[dim_idx];
         idx /= dim;

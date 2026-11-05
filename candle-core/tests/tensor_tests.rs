@@ -413,6 +413,33 @@ fn var(device: &Device) -> Result<()> {
     Ok(())
 }
 
+/// Strided reductions over tensors with more than four dimensions. The Metal
+/// indexer unrolls four dimensions and used to peel the rest in the wrong order.
+fn sum_high_rank(device: &Device) -> Result<()> {
+    let (a, b, c, d, e) = (2usize, 3usize, 4usize, 5usize, 3usize);
+    let n = a * b * c * d * e;
+    let data: Vec<f32> = (0..n).map(|i| ((i * 7919) % 101) as f32 - 50.0).collect();
+    let cpu = Tensor::from_vec(data.clone(), (a, b, c, d, e), &Device::Cpu)?;
+    let dev = Tensor::from_vec(data, (a, b, c, d, e), device)?;
+    for dim in 0..5 {
+        let want = cpu.sum_keepdim(dim)?.flatten_all()?.to_vec1::<f32>()?;
+        let got = dev.sum_keepdim(dim)?.flatten_all()?.to_vec1::<f32>()?;
+        assert_eq!(want, got, "sum_keepdim({dim}) on a 5-d tensor");
+    }
+    // The broadcast backward path: sum over the expanded dimension.
+    let base = Tensor::from_vec(
+        (0..a * b * d * e).map(|i| i as f32).collect::<Vec<_>>(),
+        (a, b, 1, d, e),
+        device,
+    )?;
+    let var = candle_core::Var::from_tensor(&base)?;
+    let loss = var.as_tensor().expand((a, b, c, d, e))?.contiguous()?.sum_all()?;
+    let grads = loss.backward()?;
+    let g = grads.get(var.as_tensor()).unwrap().flatten_all()?.to_vec1::<f32>()?;
+    assert!(g.iter().all(|v| *v == c as f32), "expand gradient: {g:?}");
+    Ok(())
+}
+
 fn sum(device: &Device) -> Result<()> {
     let data = &[[[3u32, 1, 4], [1, 5, 9]], [[2, 1, 7], [8, 2, 8]]];
     let tensor = Tensor::new(data, device)?;
@@ -1727,6 +1754,7 @@ test_device!(broadcast, broadcast_cpu, broadcast_gpu, broadcast_metal);
 test_device!(slice_set, ss_cpu, ss_gpu, ss_metal);
 test_device!(cat, cat_cpu, cat_gpu, cat_metal);
 test_device!(sum, sum_cpu, sum_gpu, sum_metal);
+test_device!(sum_high_rank, sum_high_rank_cpu, sum_high_rank_gpu, sum_high_rank_metal);
 test_device!(min, min_cpu, min_gpu, min_metal);
 test_device!(max, max_cpu, max_gpu, max_metal);
 test_device!(argmax, argmax_cpu, argmax_gpu, argmax_metal);
